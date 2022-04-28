@@ -243,3 +243,14 @@ def deprecated_class(cls, name):
             super(DeprecatedClass, self).__init__(*args, **kwargs)
 
     return DeprecatedClass
+
+def deprecated_framework_feature(framework, version, feature, msg=None):
+    """Raises a warning for an SDK feature that will be removed
+    on a specific framework version.
+    
+    Args:
+        framework: The framework with the deprecated feature (ie. PyTorch, XGBoost).
+        version: The framework version in which a feature will be deprecated.
+        msg: A message about the feature to be removed.
+    """
+    _warn(f"{feature} will be deprecated in {framework} {version}.{msg}")

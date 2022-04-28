@@ -17,7 +17,7 @@ import logging
 
 from packaging.version import Version
 
-from sagemaker.deprecations import renamed_kwargs
+from sagemaker.deprecations import renamed_kwargs, deprecated_framework_feature
 from sagemaker.estimator import Framework, EstimatorBase
 from sagemaker.fw_utils import (
     framework_name_from_image,
@@ -223,6 +223,11 @@ class PyTorch(Framework):
             entry_point, source_dir, hyperparameters, image_uri=image_uri, **kwargs
         )
         self.distribution = distribution or {}
+        
+        if any([i in kwargs for i in ['rules', 'debugger_hook_config', 'tensorboard_output_config']]):
+            docs = "https://docs.aws.amazon.com/sagemaker/latest/dg/train-debugger.html"
+            msg = f"See {docs} for instructions to update your training script."
+            deprecated_framework_feature("Debugger zero code change", "PyTorch", "1.12", msg)
 
     def hyperparameters(self):
         """Return hyperparameters used by your custom PyTorch code during model training."""
